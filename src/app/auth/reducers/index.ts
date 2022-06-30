@@ -6,7 +6,7 @@ export interface AuthState {
   user: User;
 }
 
-export const authFeatureKey = "auth";
+export const authFeatureKey = "authorizationState";
 
 export const initialAuthState: AuthState = {
   user: undefined,

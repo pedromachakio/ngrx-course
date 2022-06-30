@@ -42,8 +42,6 @@ export class LoginComponent implements OnInit {
         tap((user) => {
           // tap allows us to create side effects, como log & store User info on NgRx, e redirect to /courses, in this case
 
-          console.log(user);
-
           this.store.dispatch(loginActionCreator({ user })); // dispatching actions is the way to modify the store state; allows 4 loose coupling
 
           this.router.navigateByUrl("/courses");
