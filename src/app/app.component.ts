@@ -62,17 +62,15 @@ export class AppComponent implements OnInit {
       this.isLoggedOut$ = this.globalAppStore.pipe(
         // select makes it so that values in the view are only updated when they change; eliminates repetições
         // queremos só verificar o output das expressoes !globalApplicationState["authorizationState"].user quando o valor do input mudar, otherwise é sempre o mesmo valor e
-        // n vale a pena voltar a calcular again & again; para isso guarda-se o resultado das expressos em cache com o ngrx selector
+        // n vale a pena voltar a calcular again & again; para isso guarda-se o resultado das expressoes em cache com o ngrx selector
         select(isLoggedOutSelector)
       );
     });
   }
 
   logout() {
-
     this.globalAppStore.dispatch(logoutActionCreator());
 
     this.router.navigateByUrl("");
-
   }
 }

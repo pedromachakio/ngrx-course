@@ -21,6 +21,7 @@ import { RouterState, StoreRouterConnectingModule } from "@ngrx/router-store";
 import { EffectsModule } from "@ngrx/effects";
 import { EntityDataModule } from "@ngrx/data";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { AuthGuard } from "./auth/auth.guard";
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
     path: "courses",
     loadChildren: () =>
       import("./courses/courses.module").then((m) => m.CoursesModule), // means it's lazy loaded; só quanto bater num path /courses vai efetivamente carregá-los
+      canActivate: [AuthGuard] // means that any path starting with the path /courses will be protected by this guard
   },
   {
     path: "**",
