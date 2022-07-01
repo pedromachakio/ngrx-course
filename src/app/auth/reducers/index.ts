@@ -18,5 +18,13 @@ export const authReducer = createReducer(
     return {
       user: action.user,
     };
+  }),
+  on(AuthActions.logoutActionCreator, (previousState, action) => {
+    return {
+      user: undefined
+    };
   })
 );
+
+// a reducer function always returns a new instance of the state instead of modifying
+// the existing one
