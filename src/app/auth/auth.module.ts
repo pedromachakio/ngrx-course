@@ -11,6 +11,7 @@ import { AuthService } from "./auth.service";
 import { EffectsModule } from "@ngrx/effects";
 import * as fromAuth from "./reducers";
 import { AuthGuard } from "./auth.guard";
+import { AuthEffects } from "./auth.effects";
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { AuthGuard } from "./auth.guard";
     MatButtonModule,
     RouterModule.forChild([{ path: "", component: LoginComponent }]),
     StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReducer),
-    EffectsModule.forFeature([]) // will contain side effects linked to this particular module, vs the .forRoot in app.module which has all the effects
+    EffectsModule.forFeature([AuthEffects]), // will contain side effects linked to this particular module, vs the .forRoot in app.module which has all the effects
   ],
   declarations: [LoginComponent],
   exports: [LoginComponent],
