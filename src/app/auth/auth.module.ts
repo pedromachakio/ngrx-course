@@ -21,6 +21,7 @@ import { AuthGuard } from "./auth.guard";
     MatButtonModule,
     RouterModule.forChild([{ path: "", component: LoginComponent }]),
     StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReducer),
+    EffectsModule.forFeature([]) // will contain side effects linked to this particular module, vs the .forRoot in app.module which has all the effects
   ],
   declarations: [LoginComponent],
   exports: [LoginComponent],

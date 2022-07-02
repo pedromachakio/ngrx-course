@@ -23,13 +23,12 @@ import { EntityDataModule } from "@ngrx/data";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AuthGuard } from "./auth/auth.guard";
 
-
 const routes: Routes = [
   {
     path: "courses",
     loadChildren: () =>
-      import("./courses/courses.module").then((m) => m.CoursesModule), // means it's lazy loaded; só quanto bater num path /courses vai efetivamente carregá-los
-      canActivate: [AuthGuard] // means that any path starting with the path /courses will be protected by this guard
+      import("./courses/courses.module").then((m) => m.CoursesModule), // loadChildren means it's lazy loaded; só quanto bater num path /courses vai efetivamente carregá-los
+    canActivate: [AuthGuard], // means that any path starting with the path /courses will be protected by this guard
   },
   {
     path: "**",
@@ -56,6 +55,7 @@ const routes: Routes = [
       maxAge: 25,
       logOnly: environment.production,
     }),
+    EffectsModule.forRoot([]),
   ],
   bootstrap: [AppComponent],
 })
