@@ -11,7 +11,7 @@ import {
 } from "@angular/router";
 import { GlobalAppState } from "./reducers";
 import { isLoggedInSelector, isLoggedOutSelector } from "./auth/auth.selectors";
-import { logoutActionCreator } from "./auth/auth.actions";
+import { loginActionCreator, logoutActionCreator } from "./auth/auth.actions";
 
 @Component({
   selector: "app-root",
@@ -31,6 +31,14 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // check if the user already authenticated previously (before a refresh for example)
+    const userProfile = localStorage.getItem("user");
+    if (userProfile) {
+      this.globalAppStore.dispatch(
+        loginActionCreator({ user: JSON.parse(userProfile) })
+      );
+    }
+
     this.router.events.subscribe((event) => {
       switch (true) {
         case event instanceof NavigationStart: {
@@ -71,6 +79,6 @@ export class AppComponent implements OnInit {
   logout() {
     this.globalAppStore.dispatch(logoutActionCreator());
 
-    this.router.navigateByUrl("");
+    //this.router.navigateByUrl(""); // dont think its doing anything
   }
 }

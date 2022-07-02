@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { Router } from "@angular/router";
 import { dispatch } from "rxjs/internal/observable/pairs";
 import { tap } from "rxjs/operators";
 import { AuthActions } from "./action-types";
@@ -8,14 +9,30 @@ import { AuthActions } from "./action-types";
 export class AuthEffects {
   // we want to as a side effect save the user profile in the local storage after a (login) action
 
-  constructor(private action$: Actions) {}
+  constructor(private action$: Actions, private router: Router) {}
 
-  login$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(AuthActions.loginActionCreator), // gives auto completion
-      tap((action) => localStorage.setItem("user", JSON.stringify(action.user)))
-    )
-  , {dispatch: false}); // to let ngrx effects know that this effect doesnt result in dispatching an action
+  login$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(AuthActions.loginActionCreator), // gives auto completion and selects type of action
+        tap((action) =>
+          localStorage.setItem("user", JSON.stringify(action.user))
+        )
+      ),
+    { dispatch: false }
+  ); // to let ngrx effects know that this effect doesnt result in dispatching an action
+
+  logout$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(AuthActions.logoutActionCreator),
+        tap((action) => {
+          localStorage.removeItem("user");
+          this.router.navigateByUrl("/login");
+        })
+      ),
+    { dispatch: false }
+  );
 }
 
 //  not the best way to implement it, not typesafe, just a basic example
