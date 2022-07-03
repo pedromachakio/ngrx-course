@@ -9,6 +9,7 @@ import { Course } from "../model/course";
 export class CoursesDataService extends DefaultDataService<Course> {
   constructor(http: HttpClient, httpUrlGenerator: HttpUrlGenerator) {
     // to customize we use HttpUrlGenerator
+    // this service is only needed to customize Url otherwise not needed if it follows conventions /api/plural
     super("Course", http, httpUrlGenerator);
   }
 

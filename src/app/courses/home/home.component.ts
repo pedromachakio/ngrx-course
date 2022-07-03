@@ -1,80 +1,62 @@
-import {Component, OnInit} from '@angular/core';
-import {compareCourses, Course} from '../model/course';
-import {Observable} from "rxjs";
-import {defaultDialogConfig} from '../shared/default-dialog-config';
-import {EditCourseDialogComponent} from '../edit-course-dialog/edit-course-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import {map, shareReplay} from 'rxjs/operators';
-import {CoursesHttpService} from '../services/courses-http.service';
-
-
+import { Component, OnInit } from "@angular/core";
+import { compareCourses, Course } from "../model/course";
+import { Observable } from "rxjs";
+import { defaultDialogConfig } from "../shared/default-dialog-config";
+import { EditCourseDialogComponent } from "../edit-course-dialog/edit-course-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { map, shareReplay } from "rxjs/operators";
+import { CoursesHttpService } from "../services/courses-http.service";
+import { CourseEntityService } from "../services/courses-entity.service";
 
 @Component({
-    selector: 'home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+  selector: "home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
+  promoTotal$: Observable<number>;
 
-    promoTotal$: Observable<number>;
+  loading$: Observable<boolean>;
 
-    loading$: Observable<boolean>;
+  beginnerCourses$: Observable<Course[]>;
 
-    beginnerCourses$: Observable<Course[]>;
+  advancedCourses$: Observable<Course[]>;
 
-    advancedCourses$: Observable<Course[]>;
+  constructor(
+    private dialog: MatDialog,
+    private courseEntityService: CourseEntityService // will be used to get the data from BE but also query it in the store
+  ) {}
 
-
-    constructor(
-      private dialog: MatDialog,
-      private coursesHttpService: CoursesHttpService) {
-
-    }
-
-    ngOnInit() {
-      this.reload();
-    }
+  ngOnInit() {
+    this.reload();
+  }
 
   reload() {
+    this.beginnerCourses$ = this.courseEntityService.entities$.pipe(
+      map((entities) =>
+        entities.filter((course) => course.category == "BEGINNER")
+      )
+    );
 
-    const courses$ = this.coursesHttpService.findAllCourses()
-      .pipe(
-        map(courses => courses.sort(compareCourses)),
-        shareReplay()
-      );
+    this.advancedCourses$ = this.courseEntityService.entities$.pipe(
+      map((entities) =>
+        entities.filter((course) => course.category == "ADVANCED")
+      )
+    );
 
-    this.loading$ = courses$.pipe(map(courses => !!courses));
-
-    this.beginnerCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(course => course.category == 'BEGINNER'))
-      );
-
-
-    this.advancedCourses$ = courses$
-      .pipe(
-        map(courses => courses.filter(course => course.category == 'ADVANCED'))
-      );
-
-    this.promoTotal$ = courses$
-        .pipe(
-            map(courses => courses.filter(course => course.promo).length)
-        );
-
+    this.promoTotal$ = this.courseEntityService.entities$.pipe(
+      map((entities) => entities.filter((course) => course.promo).length)
+    );
   }
 
   onAddCourse() {
-
     const dialogConfig = defaultDialogConfig();
 
     dialogConfig.data = {
-      dialogTitle:"Create Course",
-      mode: 'create'
+      dialogTitle: "Create Course",
+      mode: "create",
     };
 
     this.dialog.open(EditCourseDialogComponent, dialogConfig);
-
   }
-
-
 }
