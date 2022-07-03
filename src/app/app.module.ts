@@ -22,7 +22,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { EntityDataModule } from "@ngrx/data";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AuthGuard } from "./auth/auth.guard";
-import { reducers } from "./reducers";
+import { metaReducers, reducers } from "./reducers";
 
 const routes: Routes = [
   {
@@ -51,12 +51,13 @@ const routes: Routes = [
     MatListModule,
     MatToolbarModule,
     AuthModule.forRoot(), // means it's eagerly loaded
-    StoreModule.forRoot(reducers, { // metareducers
+    StoreModule.forRoot(reducers, {
+      metaReducers,
       runtimeChecks: {
         strictStateImmutability: true, // so the state of the app is never mutated by our code accidentally
         strictActionImmutability: true, // so the action objects of the app is never mutated by our code accidentally (e nao partir o time travel debugger)
         strictActionSerializability: true, // if our action had a date this would break because dates are not serializable; this ensures that the actions can be saved by the devtools so that they can be replayed later one
-        strictStateSerializability: true // ensures that the state inside the store is always serializable (for exame if we want to save it in the local storage)
+        strictStateSerializability: true, // ensures that the state inside the store is always serializable (for exame if we want to save it in the local storage)
       },
     }), // add GlobalAppState interface here?
     StoreDevtoolsModule.instrument({
