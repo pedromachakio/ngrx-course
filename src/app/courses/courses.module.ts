@@ -30,15 +30,23 @@ import { compareCourses, Course } from "./model/course";
 
 import { compareLessons, Lesson } from "./model/lesson";
 import { CourseEntityService } from "./services/courses-entity.service";
+import { CoursesResolver } from "./services/courses.resolver";
+import { CoursesDataService } from "./services/courses-data.service";
 
 export const coursesRoutes: Routes = [
   {
     path: "",
     component: HomeComponent,
+    resolve: {
+      courses: CoursesResolver,
+    },
   },
   {
     path: ":courseUrl",
     component: CourseComponent,
+    resolve: {
+      courses: CoursesResolver,
+    },
   },
 ];
 
@@ -80,11 +88,22 @@ const entityMetadata: EntityMetadataMap = {
     CourseComponent,
   ],
   entryComponents: [EditCourseDialogComponent],
-  providers: [CoursesHttpService, CourseEntityService],
+  providers: [
+    CoursesHttpService,
+    CourseEntityService,
+    CoursesResolver,
+    CoursesDataService,
+  ],
 })
 export class CoursesModule {
   // this modification is necessary because courses is a lady module
-  constructor(private eds: EntityDefinitionService) {
+  constructor(
+    private eds: EntityDefinitionService,
+    private entityDataService: EntityDataService, //service to register special data services for our entities
+    private coursesDataService: CoursesDataService
+  ) {
     eds.registerMetadataMap(entityMetadata);
+
+    entityDataService.registerService("Course", coursesDataService); // now ngrx knows not to do default behaviour for fetching and processing for this entity
   }
 }
