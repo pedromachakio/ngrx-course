@@ -41,14 +41,14 @@ export class AppComponent implements OnInit {
 
     this.router.events.subscribe((event) => {
       switch (true) {
-        case event instanceof NavigationStart: {
+        case event instanceof NavigationStart: { // begin loading during navigation start
           this.loading = true;
           break;
         }
 
-        case event instanceof NavigationEnd:
+        case event instanceof NavigationEnd: // // end loading during navigation start
         case event instanceof NavigationCancel:
-        case event instanceof NavigationError: {
+        case event instanceof NavigationError: { 
           this.loading = false;
           break;
         }
