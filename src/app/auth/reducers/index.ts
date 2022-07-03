@@ -14,14 +14,16 @@ export const initialAuthState: AuthState = {
 
 export const authReducer = createReducer(
   initialAuthState,
+
   on(AuthActions.loginActionCreator, (previousState, action) => {
     return {
       user: action.user,
     };
   }),
+
   on(AuthActions.logoutActionCreator, (previousState, action) => {
     return {
-      user: undefined
+      user: undefined,
     };
   })
 );
