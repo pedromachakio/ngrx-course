@@ -24,6 +24,10 @@ export const coursesReducer = createReducer(
     CourseActions.allCoursesLoadedActionCreator,
     (state, action) =>
       adapter.setAll(action.courses, { ...state, allCoursesLoaded: true }) // ...state para copiar o state todo mas alterar a prop allCoursesLoaded
+  ),
+
+  on(CourseActions.courseUpdatedActionCreator, (state, action) =>
+    adapter.updateOne(action.update, state) // updated in memory (doesnt send to BE yet)
   )
 );
 
