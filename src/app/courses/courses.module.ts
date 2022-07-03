@@ -54,6 +54,9 @@ const entityMetadata: EntityMetadataMap = {
   // 1 entry for each entity
   Course: {
     sortComparer: compareCourses, // fixing correct sorting order
+    entityDispatcherOptions: {
+      optimisticUpdate: true, // so changes (edits for e.g) are immediately reflected in the UI, not waiting for the request to the backend to go through
+    },
   },
 };
 
