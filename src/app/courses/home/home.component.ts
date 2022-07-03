@@ -12,7 +12,7 @@ import {
   selectAdvancedCourses,
   selectBeginnerCourses,
   selectPromoTotal,
-} from "../reducers/course.reducers";
+} from "../courses.selectors";
 
 @Component({
   selector: "home",
@@ -21,8 +21,6 @@ import {
 })
 export class HomeComponent implements OnInit {
   promoTotal$: Observable<number>;
-
-  loading$: Observable<boolean>;
 
   beginnerCourses$: Observable<Course[]>;
 

@@ -69,7 +69,7 @@ export const coursesRoutes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(coursesRoutes),
     EffectsModule.forFeature([CoursesEffects]),
-    StoreModule.forFeature("courses", coursesReducer)
+    StoreModule.forFeature("courses", coursesReducer),
   ],
   declarations: [
     HomeComponent,

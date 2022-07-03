@@ -4,11 +4,12 @@ import {
   Resolve,
   RouterStateSnapshot,
 } from "@angular/router";
-import { Store } from "@ngrx/store";
+import { select, Store } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { finalize, first, tap } from "rxjs/operators";
+import { filter, finalize, first, tap } from "rxjs/operators";
 import { GlobalAppState } from "../reducers";
 import { loadAllCoursesActionCreator } from "./course.actions";
+import { areCoursesLoaded } from "./courses.selectors";
 
 // router ensures that screen is not displayed if data hasnt been retrieved from backend yet
 @Injectable()
@@ -24,12 +25,14 @@ export class CoursesResolver implements Resolve<any> {
     //check if courses are in store; if not dispatch loadAllCourses action; if they are there, do nothing
 
     return this.globalAppStore.pipe(
-      tap(() => {
-        if (!this.isLoading) {
+      select(areCoursesLoaded),
+      tap((coursesLoaded) => {
+        if (!this.isLoading && !coursesLoaded) {
           this.isLoading = true;
           this.globalAppStore.dispatch(loadAllCoursesActionCreator());
         }
       }),
+      filter((coursesLoaded) => coursesLoaded),
       first(), // waits for Observable to emit a value
       finalize(() => (this.isLoading = false)) // as soon as observable ends, reset back to false
     );
