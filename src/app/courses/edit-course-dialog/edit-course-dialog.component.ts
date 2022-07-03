@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { Course } from "../model/course";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -10,6 +10,7 @@ import { CourseEntityService } from "../services/courses-entity.service";
   selector: "course-dialog",
   templateUrl: "./edit-course-dialog.component.html",
   styleUrls: ["./edit-course-dialog.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditCourseDialogComponent {
   form: FormGroup;
