@@ -6,13 +6,15 @@ import {
 } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { first, tap } from "rxjs/operators";
+import { finalize, first, tap } from "rxjs/operators";
 import { GlobalAppState } from "../reducers";
 import { loadAllCoursesActionCreator } from "./course.actions";
 
 // router ensures that screen is not displayed if data hasnt been retrieved from backend yet
 @Injectable()
 export class CoursesResolver implements Resolve<any> {
+  isLoading = false; // to avoid dispatching over and over while its already loading
+
   constructor(private globalAppStore: Store<GlobalAppState>) {}
 
   resolve(
@@ -23,9 +25,13 @@ export class CoursesResolver implements Resolve<any> {
 
     return this.globalAppStore.pipe(
       tap(() => {
-        this.globalAppStore.dispatch(loadAllCoursesActionCreator());
+        if (!this.isLoading) {
+          this.isLoading = true;
+          this.globalAppStore.dispatch(loadAllCoursesActionCreator());
+        }
       }),
-      first() // waits for Observable to emit a value
+      first(), // waits for Observable to emit a value
+      finalize(() => (this.isLoading = false)) // as soon as observable ends, reset back to false
     );
   }
 }
