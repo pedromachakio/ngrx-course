@@ -22,6 +22,7 @@ import { EffectsModule } from "@ngrx/effects";
 import { EntityDataModule } from "@ngrx/data";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AuthGuard } from "./auth/auth.guard";
+import { reducers } from "./reducers";
 
 const routes: Routes = [
   {
@@ -50,12 +51,16 @@ const routes: Routes = [
     MatListModule,
     MatToolbarModule,
     AuthModule.forRoot(), // means it's eagerly loaded
-    StoreModule.forRoot({}, {}), // add GlobalAppState interface here?
+    StoreModule.forRoot(reducers, {}), // add GlobalAppState interface here?
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([]),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: "router",
+      routerState: RouterState.Minimal,
+    }),
   ],
   bootstrap: [AppComponent],
 })
